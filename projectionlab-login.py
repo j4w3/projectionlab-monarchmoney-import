@@ -1,9 +1,10 @@
+import os
+import time
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import time  # Import time module
 
 options = ChromeOptions()
 options.binary_location = os.getenv("CHROME_BINARY_PATH")
