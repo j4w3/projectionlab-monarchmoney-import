@@ -13,7 +13,9 @@ jobs:
       with:
         node-version: '14' # Adjust the Node.js version as needed
     - name: Install dependencies
-      run: npm install
+      run: |
+        npm install
+        npm install node-fetch
     - name: Run index.js
       run: node index.js
       env:
