@@ -1,0 +1,57 @@
+name: Manually Run Workflow
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-node-script:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: '14' # Adjust the Node.js version as needed
+    - name: Install dependencies
+      run: |
+        npm install
+        npm install node-fetch
+    - name: Run index.js
+      run: node index.js
+      env:
+        PROJECTION_LABS_API_KEY: ${{ secrets.PROJECTION_LABS_API_KEY }}
+        MONARCH_EMAIL: ${{ secrets.MONARCH_EMAIL }}
+        MONARCH_PASSWORD: ${{ secrets.MONARCH_PASSWORD }}
+        MONARCH_MFA: ${{ secrets.MONARCH_MFA }}
+        ACCOUNT_MAPPING: ${{ secrets.ACCOUNT_MAPPING }}
+        # Add other environment variables as needed
+
+  run-selenium-job:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.10' # Choose the Python version you need, adjust as necessary
+    
+    - name: Install Selenium
+      run: pip install selenium==4.0.0 # Adjust the version number as needed
+      
+    - name: Install Chrome and ChromeDriver
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y chromium-browser chromium-chromedriver
+        sudo chmod +x /usr/lib/chromium-browser/chromedriver
+        echo "CHROME_DRIVER_PATH=/usr/lib/chromium-browser/chromedriver" >> $GITHUB_ENV
+        echo "CHROME_BINARY_PATH=/usr/bin/chromium-browser" >> $GITHUB_ENV
+
+    - name: Run Selenium Script
+      env:
+        CHROME_DRIVER_PATH: ${{ env.CHROME_DRIVER_PATH }}
+        CHROME_BINARY_PATH: ${{ env.CHROME_BINARY_PATH }}
+        PROJECTIONLAB_EMAIL: ${{ env.PROJECTIONLAB_EMAIL }}
+        PROJECTIONLAB_PASSWORD: ${{ env.PROJECTIONLAB_PASSWORD }}
+      run: |
+        python projectionlab-login.py
