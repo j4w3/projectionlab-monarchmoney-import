@@ -1,18 +1,23 @@
 import os
 import time
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-options = ChromeOptions()
-options.binary_location = os.getenv("CHROME_BINARY_PATH")
-options.add_argument("--headless")
-options.add_argument("--disable-gpu")
-options.add_argument("--no-sandbox")
-options.add_argument("--disable-dev-shm-usage")
-driver = webdriver.Chrome(executable_path=os.getenv("CHROME_DRIVER_PATH"), options=options)
+chrome_driver_path = os.getenv("CHROME_DRIVER_PATH")
+chrome_options = ChromeOptions()
+chrome_options.binary_location = os.getenv("CHROME_BINARY_PATH")
+chrome_options.add_argument("--headless")
+chrome_options.add_argument("--disable-gpu")
+chrome_options.add_argument("--no-sandbox")
+chrome_options.add_argument("--disable-dev-shm-usage")
+
+# Updated instantiation for Selenium 4.x
+service = Service(executable_path=chrome_driver_path)
+driver = webdriver.Chrome(service=service, options=chrome_options)
 
 driver.get("https://app.projectionlab.com/login")
 
