@@ -1,5 +1,6 @@
 import { monarchCredentials } from './config.js'
 import { authenticator } from 'otplib';
+import fetch from 'node-fetch';
 
 async function login() {
     let response = await fetch("https://api.monarchmoney.com/auth/login/", {
