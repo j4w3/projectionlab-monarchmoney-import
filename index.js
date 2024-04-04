@@ -25,6 +25,7 @@ function createUpdateFunction(accountMapping) {
 }
 
 async function main() {
+    console.log("Initializing")
     const token = await login();
 
     const options = {
@@ -39,8 +40,9 @@ async function main() {
         "body": "{\"operationName\":\"Web_GetAccountsPage\",\"variables\":{},\"query\":\"query Web_GetAccountsPage {\\n  hasAccounts\\n  accountTypeSummaries {\\n    type {\\n      name\\n      display\\n      group\\n      __typename\\n    }\\n    accounts {\\n      id\\n      ...AccountsListFields\\n      __typename\\n    }\\n    totalDisplayBalance\\n    __typename\\n  }\\n  householdPreferences {\\n    id\\n    accountGroupOrder\\n    __typename\\n  }\\n}\\n\\nfragment AccountsListFields on Account {\\n  id\\n  syncDisabled\\n  isHidden\\n  isAsset\\n  includeInNetWorth\\n  order\\n  type {\\n    name\\n    display\\n    __typename\\n  }\\n  ...AccountListItemFields\\n  __typename\\n}\\n\\nfragment AccountListItemFields on Account {\\n  id\\n  displayName\\n  displayBalance\\n  signedBalance\\n  updatedAt\\n  syncDisabled\\n  icon\\n  isHidden\\n  isAsset\\n  includeInNetWorth\\n  includeBalanceInNetWorth\\n  displayLastUpdatedAt\\n  ...AccountMaskFields\\n  credential {\\n    id\\n    updateRequired\\n    dataProvider\\n    disconnectedFromDataProviderAt\\n    __typename\\n  }\\n  institution {\\n    id\\n    ...InstitutionStatusTooltipFields\\n    __typename\\n  }\\n  __typename\\n}\\n\\nfragment AccountMaskFields on Account {\\n  id\\n  mask\\n  subtype {\\n    display\\n    __typename\\n  }\\n  __typename\\n}\\n\\nfragment InstitutionStatusTooltipFields on Institution {\\n  id\\n  logo\\n  name\\n  status\\n  plaidStatus\\n  hasIssuesReported\\n  url\\n  hasIssuesReportedMessage\\n  transactionsStatus\\n  balanceStatus\\n  __typename\\n}\"}",
         "method": "POST"
     };
-
+    console.log("Fetching Monarch data")
     await fetchAndProcessData("https://api.monarchmoney.com/graphql", options, accountMapping);
+    console.log("Updating account mapping script")
     createUpdateFunction(accountMapping);
 }
 
