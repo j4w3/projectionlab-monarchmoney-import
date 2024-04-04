@@ -1,0 +1,25 @@
+name: Manually Run index.js Script
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-node-script:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: '14' # Adjust the Node.js version as needed
+    - name: Install dependencies
+      run: npm install
+    - name: Run index.js
+      run: node index.js
+      env:
+        PROJECTION_LABS_API_KEY: ${{ secrets.PROJECTION_LABS_API_KEY }}
+        MONARCH_EMAIL: ${{ secrets.MONARCH_EMAIL }}
+        MONARCH_PASSWORD: ${{ secrets.MONARCH_PASSWORD }}
+        MONARCH_MFA: ${{ secrets.MONARCH_MFA }}
+        ACCOUNT_MAPPING: ${{ secrets.ACCOUNT_MAPPING }}
+        # Add other environment variables as needed
