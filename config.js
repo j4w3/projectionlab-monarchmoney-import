@@ -3,7 +3,7 @@ const projection_Labs_api_key = process.env.PROJECTION_LABS_API_KEY;
 const monarchCredentials = {
     monarch_email: process.env.MONARCH_EMAIL,
     monarch_password: process.env.MONARCH_PASSWORD,
-    monarch_mfa: process.env.MONARCH_MFA
+    monarch_mfa: process.env.MONARCH_MFA === 'null' ? null : process.env.MONARCH_MFA
 };
 
 // Comment out after getting account mapping locally
