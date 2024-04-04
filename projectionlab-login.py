@@ -30,7 +30,7 @@ wait.until(EC.element_to_be_clickable((By.XPATH, sign_in_button_xpath))).click()
 email_input_xpath = "//input[@type='email' and contains(@class, 'firebaseui-id-email')]"
 email_input = wait.until(EC.visibility_of_element_located((By.XPATH, email_input_xpath)))
 email_input.clear()
-email_input.send_keys("jojomojo@gmail.com")
+email_input.send_keys(os.getenv("PROJECTIONLAB_EMAIL"))
 
 # Wait and click the "Next" button
 next_button_xpath = "//button[contains(text(), 'Next')]"
@@ -41,7 +41,7 @@ next_button.click()
 password_input_xpath = "//input[@type='password' and contains(@class, 'firebaseui-id-password')]"
 password_input = wait.until(EC.visibility_of_element_located((By.XPATH, password_input_xpath)))
 password_input.clear()
-password_input.send_keys("Asdf1234!")
+password_input.send_keys(os.getenv("PROJECTIONLAB_PASSWORD"))
 
 # Dismiss the Cookie Consent banner by clicking the "OK" button
 ok_button_id = "onetrust-accept-btn-handler"
