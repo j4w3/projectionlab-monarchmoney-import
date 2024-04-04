@@ -6,11 +6,12 @@ from selenium.webdriver.support import expected_conditions as EC
 import time  # Import time module
 
 options = ChromeOptions()
+options.binary_location = os.getenv("CHROME_BINARY_PATH")
 options.add_argument("--headless")
 options.add_argument("--disable-gpu")
 options.add_argument("--no-sandbox")
 options.add_argument("--disable-dev-shm-usage")
-driver = webdriver.Chrome(options=options)
+driver = webdriver.Chrome(executable_path=os.getenv("CHROME_DRIVER_PATH"), options=options)
 
 driver.get("https://app.projectionlab.com/login")
 
