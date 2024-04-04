@@ -30,5 +30,7 @@ jobs:
       env:
         CHROME_DRIVER_PATH: ${{ env.CHROME_DRIVER_PATH }}
         CHROME_BINARY_PATH: ${{ env.CHROME_BINARY_PATH }}
+        PROJECTIONLAB_EMAIL: ${{ env.PROJECTIONLAB_EMAIL }}
+        PROJECTIONLAB_PASSWORD: ${{ env.PROJECTIONLAB_PASSWORD }}
       run: |
         python projectionlab-login.py
