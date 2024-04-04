@@ -16,7 +16,7 @@ jobs:
         python-version: '3.10' # Choose the Python version you need, adjust as necessary
     
     - name: Install Selenium
-      run: pip install selenium
+      run: pip install selenium==4.0.0 # Adjust the version number as needed
       
     - name: Install Chrome and ChromeDriver
       run: |
