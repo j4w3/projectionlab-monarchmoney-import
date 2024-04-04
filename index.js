@@ -18,9 +18,12 @@ async function fetchAndProcessData(url, options, accountMapping) {
 }
 
 function createUpdateFunction(accountMapping) {
+    // Access the API key from environment variables
+    const apiKey = process.env.PROJECTION_LABS_API_KEY;
+    
     for (const accountMappingElement of accountMapping) {
         if (accountMappingElement.balance !== null) {
-            console.log(`await window.projectionlabPluginAPI.updateAccount('${accountMappingElement.plAccountID}', { balance: ${accountMappingElement.balance} }, { key: '${projection_Labs_api_key}' });`);
+            console.log(`await window.projectionlabPluginAPI.updateAccount('${accountMappingElement.plAccountID}', { balance: ${accountMappingElement.balance} }, { key: '${apiKey}' });`);
         }
     }
 }
