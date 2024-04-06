@@ -33,12 +33,22 @@ jobs:
           echo "Commands file does not exist."
           exit 1
         fi
+    - name: Upload commands.txt as an artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: commands-file
+        path: commands.txt
 
   run-selenium-job:
+    needs: run-node-script
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+    - uses: actions/checkout@v2
+    - name: Download commands.txt
+      uses: actions/download-artifact@v2
+      with:
+        name: commands-file
+        path: .
     - name: Setup Python
       uses: actions/setup-python@v2
       with:
