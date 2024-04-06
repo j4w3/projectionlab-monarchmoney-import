@@ -74,7 +74,7 @@ page_text = driver.find_element(By.TAG_NAME, "body").text
 print("Visible text on the page:", page_text)
 
 # Inject output script
-commands_file_path = 'commands.txt'
+file_path = 'commands.txt'  # Adjust this path if the file is stored elsewhere
 
 try:
     with open(file_path, 'r') as file:
@@ -83,6 +83,6 @@ try:
         driver.execute_script(command.strip())
     print("Commands executed successfully.")
 except Exception as e:
-    print("Failed to execute commands:", str(e))
+    print(f"Failed to execute commands: {str(e)}")
 
 driver.close()
