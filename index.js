@@ -1,9 +1,7 @@
 import {projection_Labs_api_key, accountMapping} from './config.js'
 import login from './common.js';
 import fetch from 'node-fetch';
-
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
 
 async function fetchAndProcessData(url, options, accountMapping) {
     const response = await fetch(url, options);
