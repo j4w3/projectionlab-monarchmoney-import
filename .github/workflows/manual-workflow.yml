@@ -25,6 +25,14 @@ jobs:
         MONARCH_MFA: ${{ secrets.MONARCH_MFA }}
         ACCOUNT_MAPPING: ${{ secrets.ACCOUNT_MAPPING }}
         # Add other environment variables as needed
+    - name: Check if commands file exists
+      run: |
+        if [ -f commands.txt ]; then
+          echo "Commands file exists."
+        else
+          echo "Commands file does not exist."
+          exit 1
+        fi
 
   run-selenium-job:
     runs-on: ubuntu-latest
