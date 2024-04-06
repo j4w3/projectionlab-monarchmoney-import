@@ -36,6 +36,10 @@ email_input.clear()
 email_input.send_keys(os.getenv("PROJECTIONLAB_EMAIL"))
 print("Email entered: ", os.getenv("PROJECTIONLAB_EMAIL"))
 
+# Print out all of the visible text on the page to verify the actions were completed successfully
+page_text = driver.find_element(By.TAG_NAME, "body").text
+print("Visible text on the page:", page_text)
+
 # Wait and click the "Next" button
 print("Clicking 'Next'...")
 next_button_xpath = "//button[contains(text(), 'Next')]"
