@@ -77,10 +77,12 @@ print("Visible text on the page:", page_text)
 file_path = 'commands.txt'  # Adjust this path if the file is stored elsewhere
 
 try:
-    with open(file_path, 'r') as file:
-        commands = file.readlines()
+    with open('commands.txt', 'r') as file:
+        commands = file.read().strip().split('\n')
+        print(commands)
     for command in commands:
-        driver.execute_script(command.strip())
+        print(command)
+        driver.execute_script(command)
     print("Commands executed successfully.")
 except Exception as e:
     print(f"Failed to execute commands: {str(e)}")
