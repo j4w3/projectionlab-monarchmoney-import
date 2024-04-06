@@ -86,10 +86,23 @@ try:
 except Exception as e:
     print(f"Failed to execute commands: {str(e)}")
 
-# Wait a couple of seconds for the login process to complete
+# Wait a couple of seconds
 time.sleep(4)
 
 page_text = driver.find_element(By.TAG_NAME, "body").text
 print("Visible text on the page post-script:", page_text)
+
+# Use JavaScript to click the "Profile" button
+print("Clicking profile...")
+user_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[contains(@class, 'v-avatar') and contains(@class, 'app-bar') and contains(@class, 'text--primary')]")))
+user_button.click()
+
+# Use JavaScript to click the "Sign Out" button
+print("Signing out...")
+sign_out_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='v-list-item__title' and contains(text(), 'Sign Out')]")))
+sign_out_button.click()
+
+# Wait a couple of seconds
+time.sleep(2)
 
 driver.close()
