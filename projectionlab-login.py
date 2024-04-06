@@ -42,10 +42,6 @@ next_button_xpath = "//button[contains(text(), 'Next')]"
 next_button = wait.until(EC.element_to_be_clickable((By.XPATH, next_button_xpath)))
 next_button.click()
 
-# Print out all of the visible text on the page to verify the actions were completed successfully
-page_text = driver.find_element(By.TAG_NAME, "body").text
-print("Visible text on the page:", page_text)
-
 # Wait for the password text field to be visible and enter the password using XPath
 print("Entering password...")
 password_input_xpath = "//input[@type='password' and contains(@class, 'firebaseui-id-password')]"
@@ -71,7 +67,10 @@ wait.until(EC.visibility_of_element_located((By.TAG_NAME, 'body')))
 
 # Print out all of the visible text on the page to verify the actions were completed successfully
 page_text = driver.find_element(By.TAG_NAME, "body").text
-print("Visible text on the page:", page_text)
+print("Visible text on the page pre-script:", page_text)
+
+# Wait a couple of seconds for the login process to complete
+time.sleep(4)
 
 # Inject output script
 file_path = 'commands.txt'  # Adjust this path if the file is stored elsewhere
@@ -86,5 +85,11 @@ try:
     print("Commands executed successfully.")
 except Exception as e:
     print(f"Failed to execute commands: {str(e)}")
+
+# Wait a couple of seconds for the login process to complete
+time.sleep(4)
+
+page_text = driver.find_element(By.TAG_NAME, "body").text
+print("Visible text on the page post-script:", page_text)
 
 driver.close()
