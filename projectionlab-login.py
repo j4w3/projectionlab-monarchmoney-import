@@ -34,6 +34,7 @@ email_input_xpath = "//input[@type='email' and contains(@class, 'firebaseui-id-e
 email_input = wait.until(EC.visibility_of_element_located((By.XPATH, email_input_xpath)))
 email_input.clear()
 email_input.send_keys(os.getenv("PROJECTIONLAB_EMAIL"))
+print("Email entered: ", os.getenv("PROJECTIONLAB_EMAIL"))
 
 # Wait and click the "Next" button
 print("Clicking 'Next'...")
