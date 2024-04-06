@@ -73,4 +73,16 @@ wait.until(EC.visibility_of_element_located((By.TAG_NAME, 'body')))
 page_text = driver.find_element(By.TAG_NAME, "body").text
 print("Visible text on the page:", page_text)
 
+# Inject output script
+commands_file_path = 'commands.txt'
+
+try:
+    with open(file_path, 'r') as file:
+        commands = file.readlines()
+    for command in commands:
+        driver.execute_script(command.strip())
+    print("Commands executed successfully.")
+except Exception as e:
+    print("Failed to execute commands:", str(e))
+
 driver.close()
