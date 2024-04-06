@@ -1,4 +1,5 @@
 import {projection_Labs_api_key, accountMapping} from './config.js'
+import { fileURLToPath } from 'url';
 import login from './common.js';
 import fetch from 'node-fetch';
 import fs from 'fs';
@@ -32,16 +33,16 @@ function createUpdateFunction(accountMapping) {
 
 function writeUpdateFunction(accountMapping) {
     const apiKey = process.env.PROJECTION_LABS_API_KEY;
-    let commands = [];  // Array to hold commands
-    
+    let commands = [];
+
     for (const accountMappingElement of accountMapping) {
         if (accountMappingElement.balance !== null) {
             commands.push(`await window.projectionlabPluginAPI.updateAccount('${accountMappingElement.plAccountID}', { balance: ${accountMappingElement.balance} }, { key: '${apiKey}' });`);
         }
     }
 
-    // Write commands to a file
-    fs.writeFileSync(path.join(__dirname, 'commands.txt'), commands.join('\n'), 'utf8');
+    const dirname = path.dirname(fileURLToPath(import.meta.url));
+    fs.writeFileSync(path.join(dirname, 'commands.txt'), commands.join('\n'), 'utf8');
 }
 
 async function main() {
