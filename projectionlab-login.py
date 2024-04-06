@@ -19,35 +19,42 @@ chrome_options.add_argument("--disable-dev-shm-usage")
 service = Service(executable_path=chrome_driver_path)
 driver = webdriver.Chrome(service=service, options=chrome_options)
 
+print("Navigating to the login page...")
 driver.get("https://app.projectionlab.com/login")
 
 # Wait and click the "Sign in with Email" button
+print("Clicking the 'Sign in with Email' button...")
 wait = WebDriverWait(driver, 10)
 sign_in_button_xpath = "//button[contains(@class, 'firebaseui-idp-button') and .//span[contains(text(), 'Sign in with Email')]]"
 wait.until(EC.element_to_be_clickable((By.XPATH, sign_in_button_xpath))).click()
 
 # Wait for the email text field to be visible and enter the email using XPath
+print("Entering email...")
 email_input_xpath = "//input[@type='email' and contains(@class, 'firebaseui-id-email')]"
 email_input = wait.until(EC.visibility_of_element_located((By.XPATH, email_input_xpath)))
 email_input.clear()
 email_input.send_keys(os.getenv("PROJECTIONLAB_EMAIL"))
 
 # Wait and click the "Next" button
+print("Clicking 'Next'...")
 next_button_xpath = "//button[contains(text(), 'Next')]"
 next_button = wait.until(EC.element_to_be_clickable((By.XPATH, next_button_xpath)))
 next_button.click()
 
 # Wait for the password text field to be visible and enter the password using XPath
+print("Entering password...")
 password_input_xpath = "//input[@type='password' and contains(@class, 'firebaseui-id-password')]"
 password_input = wait.until(EC.visibility_of_element_located((By.XPATH, password_input_xpath)))
 password_input.clear()
 password_input.send_keys(os.getenv("PROJECTIONLAB_PASSWORD"))
 
 # Dismiss the Cookie Consent banner by clicking the "OK" button
+print("Clearing banner...")
 ok_button_id = "onetrust-accept-btn-handler"
 wait.until(EC.element_to_be_clickable((By.ID, ok_button_id))).click()
 
 # Use JavaScript to click the "Sign In" button
+print("Signing in...")
 sign_in_button = wait.until(EC.presence_of_element_located((By.XPATH, "//button[contains(@class, 'firebaseui-id-submit')]")))
 driver.execute_script("arguments[0].click();", sign_in_button)
 
