@@ -1,7 +1,6 @@
 import {projection_Labs_api_key, accountMapping} from './config.js'
 import login from './common.js';
 import fetch from 'node-fetch';
-import fs from 'fs';
 
 async function fetchAndProcessData(url, options, accountMapping) {
     const response = await fetch(url, options);
@@ -19,41 +18,36 @@ async function fetchAndProcessData(url, options, accountMapping) {
 }
 
 function createUpdateFunction(accountMapping) {
+    // Access the API key from environment variables
     const apiKey = process.env.PROJECTION_LABS_API_KEY;
-    let commands = [];  // Array to hold commands
     
     for (const accountMappingElement of accountMapping) {
         if (accountMappingElement.balance !== null) {
-            commands.push(`await window.projectionlabPluginAPI.updateAccount('${accountMappingElement.plAccountID}', { balance: ${accountMappingElement.balance} }, { key: '${apiKey}' });`);
+            console.log(`await window.projectionlabPluginAPI.updateAccount('${accountMappingElement.plAccountID}', { balance: ${accountMappingElement.balance} }, { key: '${apiKey}' });`);
         }
     }
-
-    // Write commands to a file
-    fs.writeFileSync(path.join(__dirname, 'commands.txt'), commands.join('\n'), 'utf8');
 }
 
 async function main() {
-    console.log("Initializing");
+    console.log("Initializing")
     const token = await login();
 
     const options = {
-        headers: {
+        "headers": {
             "accept": "*/*",
             "accept-language": "en-US,en;q=0.9",
             "authorization": token,
             "client-platform": "web",
             "content-type": "application/json",
         },
-        referrerPolicy: "no-referrer",
-        body: "{\"operationName\":\"Web_GetAccountsPage\",\"variables\":{},\"query\":\"...\"}",
-        method: "POST"
+        "referrerPolicy": "no-referrer",
+        "body": "{\"operationName\":\"Web_GetAccountsPage\",\"variables\":{},\"query\":\"query Web_GetAccountsPage {\\n  hasAccounts\\n  accountTypeSummaries {\\n    type {\\n      name\\n      display\\n      group\\n      __typename\\n    }\\n    accounts {\\n      id\\n      ...AccountsListFields\\n      __typename\\n    }\\n    totalDisplayBalance\\n    __typename\\n  }\\n  householdPreferences {\\n    id\\n    accountGroupOrder\\n    __typename\\n  }\\n}\\n\\nfragment AccountsListFields on Account {\\n  id\\n  syncDisabled\\n  isHidden\\n  isAsset\\n  includeInNetWorth\\n  order\\n  type {\\n    name\\n    display\\n    __typename\\n  }\\n  ...AccountListItemFields\\n  __typename\\n}\\n\\nfragment AccountListItemFields on Account {\\n  id\\n  displayName\\n  displayBalance\\n  signedBalance\\n  updatedAt\\n  syncDisabled\\n  icon\\n  isHidden\\n  isAsset\\n  includeInNetWorth\\n  includeBalanceInNetWorth\\n  displayLastUpdatedAt\\n  ...AccountMaskFields\\n  credential {\\n    id\\n    updateRequired\\n    dataProvider\\n    disconnectedFromDataProviderAt\\n    __typename\\n  }\\n  institution {\\n    id\\n    ...InstitutionStatusTooltipFields\\n    __typename\\n  }\\n  __typename\\n}\\n\\nfragment AccountMaskFields on Account {\\n  id\\n  mask\\n  subtype {\\n    display\\n    __typename\\n  }\\n  __typename\\n}\\n\\nfragment InstitutionStatusTooltipFields on Institution {\\n  id\\n  logo\\n  name\\n  status\\n  plaidStatus\\n  hasIssuesReported\\n  url\\n  hasIssuesReportedMessage\\n  transactionsStatus\\n  balanceStatus\\n  __typename\\n}\"}",
+        "method": "POST"
     };
-    
-    console.log("Fetching data...");
+    console.log("Fetching Monarch data")
     await fetchAndProcessData("https://api.monarchmoney.com/graphql", options, accountMapping);
-    console.log("Processing updates...");
+    console.log("Updating account mapping script")
     createUpdateFunction(accountMapping);
-    console.log("Process completed.");
 }
 
 main();
