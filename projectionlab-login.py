@@ -87,7 +87,7 @@ except Exception as e:
     print(f"Failed to execute commands: {str(e)}")
 
 # Wait a couple of seconds
-time.sleep(4)
+time.sleep(30)
 
 page_text = driver.find_element(By.TAG_NAME, "body").text
 print("Visible text on the page post-script:", page_text)
