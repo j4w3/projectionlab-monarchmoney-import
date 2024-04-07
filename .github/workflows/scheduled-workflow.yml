@@ -1,6 +1,9 @@
-name: Manually Run Workflow
+name: Scheduled Monarch to ProjectionLab Import
 
 on:
+  schedule:
+    # Run every day at 01:00 UTC
+    - cron: "00 01 * * *"
   workflow_dispatch:
 
 jobs:
