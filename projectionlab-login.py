@@ -6,6 +6,7 @@ from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.action_chains import ActionChains
 
 chrome_driver_path = os.getenv("CHROME_DRIVER_PATH")
 chrome_options = ChromeOptions()
