@@ -1,6 +1,5 @@
 import os
 import time
-import logging
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options as ChromeOptions
@@ -9,116 +8,109 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 
-# Setup logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+chrome_driver_path = os.getenv("CHROME_DRIVER_PATH")
+chrome_options = ChromeOptions()
+chrome_options.binary_location = os.getenv("CHROME_BINARY_PATH")
+chrome_options.add_argument("--headless")
+chrome_options.add_argument("--disable-gpu")
+chrome_options.add_argument("--no-sandbox")
+chrome_options.add_argument("--disable-dev-shm-usage")
 
-def create_webdriver():
-    chrome_options = ChromeOptions()
-    chrome_options.binary_location = os.getenv("CHROME_BINARY_PATH")
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--disable-gpu")
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
+# Updated instantiation for Selenium 4.x
+service = Service(executable_path=chrome_driver_path)
+driver = webdriver.Chrome(service=service, options=chrome_options)
+actions = ActionChains(driver)
 
-    service = Service(executable_path=os.getenv("CHROME_DRIVER_PATH"))
-    driver = webdriver.Chrome(service=service, options=chrome_options)
-    driver.implicitly_wait(10)
-    actions = ActionChains(driver)
-    return driver, actions
+print("Navigating to the login page...")
+driver.get("https://app.projectionlab.com/login")
 
-def login(driver, email, password):
-    logging.info("Navigating to the login page...")
-    driver.get("https://app.projectionlab.com/login")
-    
-    # Login sequence
-    logging.info("Logging in...")
-    perform_login(driver, email, password)
-    dismiss_cookie_consent(driver)
+# Wait and click the "Sign in with Email" button
+print("Clicking the 'Sign in with Email' button...")
+wait = WebDriverWait(driver, 10)
+sign_in_button_xpath = "//button[contains(@class, 'firebaseui-idp-button') and .//span[contains(text(), 'Sign in with Email')]]"
+wait.until(EC.element_to_be_clickable((By.XPATH, sign_in_button_xpath))).click()
 
-def perform_login(driver, email, password):
-    sign_in_with_email(driver)
-    enter_email(driver, email)
-    click_next(driver)
-    enter_password(driver, password)
-    sign_in(driver)
+# Wait for the email text field to be visible and enter the email using XPath
+print("Entering email...")
+email_input_xpath = "//input[@type='email' and contains(@class, 'firebaseui-id-email')]"
+email_input = wait.until(EC.visibility_of_element_located((By.XPATH, email_input_xpath)))
+email_input.clear()
+email_input.send_keys(os.getenv("PROJECTIONLAB_EMAIL"))
+print("Email entered: ", os.getenv("PROJECTIONLAB_EMAIL"))
 
-def sign_in_with_email(driver):
-    logging.info("Clicking the 'Sign in with Email' button...")
-    sign_in_button_xpath = "//button[contains(@class, 'firebaseui-idp-button') and .//span[contains(text(), 'Sign in with Email')]]"
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, sign_in_button_xpath))).click()
+# Wait and click the "Next" button
+print("Clicking 'Next'...")
+next_button_xpath = "//button[contains(text(), 'Next')]"
+next_button = wait.until(EC.element_to_be_clickable((By.XPATH, next_button_xpath)))
+next_button.click()
 
-def enter_email(driver, email):
-    logging.info("Entering email...")
-    email_input_xpath = "//input[@type='email' and contains(@class, 'firebaseui-id-email')]"
-    email_input = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, email_input_xpath)))
-    email_input.clear()
-    email_input.send_keys(email)
+# Wait for the password text field to be visible and enter the password using XPath
+print("Entering password...")
+password_input_xpath = "//input[@type='password' and contains(@class, 'firebaseui-id-password')]"
+password_input = wait.until(EC.visibility_of_element_located((By.XPATH, password_input_xpath)))
+password_input.clear()
+password_input.send_keys(os.getenv("PROJECTIONLAB_PASSWORD"))
 
-def click_next(driver):
-    logging.info("Clicking 'Next'...")
-    next_button_xpath = "//button[contains(text(), 'Next')]"
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, next_button_xpath))).click()
+# Dismiss the Cookie Consent banner by clicking the "OK" button
+print("Clearing banner...")
+ok_button_id = "onetrust-accept-btn-handler"
+wait.until(EC.element_to_be_clickable((By.ID, ok_button_id))).click()
 
-def enter_password(driver, password):
-    logging.info("Entering password...")
-    password_input_xpath = "//input[@type='password' and contains(@class, 'firebaseui-id-password')]"
-    password_input = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, password_input_xpath)))
-    password_input.clear()
-    password_input.send_keys(password)
+# Use JavaScript to click the "Sign In" button
+print("Signing in...")
+sign_in_button = wait.until(EC.presence_of_element_located((By.XPATH, "//button[contains(@class, 'firebaseui-id-submit')]")))
+driver.execute_script("arguments[0].click();", sign_in_button)
 
-def sign_in(driver):
-    logging.info("Signing in...")
-    sign_in_button_xpath = "//button[contains(@class, 'firebaseui-id-submit')]"
-    sign_in_button = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, sign_in_button_xpath)))
-    driver.execute_script("arguments[0].click();", sign_in_button)
+# Wait a couple of seconds for the login process to complete
+time.sleep(2)
 
-def dismiss_cookie_consent(driver):
-    logging.info("Clearing banner...")
-    ok_button_id = "onetrust-accept-btn-handler"
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, ok_button_id))).click()
+# Ensure the page has loaded or transitioned before proceeding
+wait.until(EC.visibility_of_element_located((By.TAG_NAME, 'body')))
 
-def navigate_finances(driver, actions):
-    logging.info("Opening menu tab...")
-    menu_button_xpath = "//button[contains(@class,'v-app-bar__nav-icon') and contains(@class,'v-btn--icon')]"
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, menu_button_xpath))).click()
+# Wait a couple of seconds for the login process to complete
+time.sleep(2)
 
-    logging.info("Opening Current Finances...")
-    finances_menu_xpath = "//a[contains(@class, 'v-list-item') and .//span[contains(text(), 'Current Finances')]]"
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, finances_menu_xpath))).click()
+# Inject output script
+file_path = 'commands.txt'  # Adjust this path if the file is stored elsewhere
 
-    logging.info("Clicking on input field...")
-    input_xpath = "//input[@type='text' and @inputmode='decimal']"
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, finances_menu_xpath))).click()
-    
-    logging.info("Deselecting input field...")
-    actions.move_by_offset(400, 50).click().perform()
+try:
+    with open('commands.txt', 'r') as file:
+        commands = file.read().strip().split('\n')
+        print(commands)
+    for command in commands:
+        print(command)
+        driver.execute_script(command)
+    print("Commands executed successfully.")
+except Exception as e:
+    print(f"Failed to execute commands: {str(e)}")
 
-    time.sleep(30)
+# Wait a couple of seconds
+time.sleep(30)
 
-def execute_commands_from_file(driver, file_path):
-    logging.info(f"Executing commands from file: {file_path}")
-    try:
-        with open(file_path, 'r') as file:
-            commands = file.read().strip().split('\n')
-            for command in commands:
-                driver.execute_script(command)
-                logging.info(f"Executed command: {command}")
-        logging.info("All commands executed successfully.")
-    except Exception as e:
-        logging.error(f"Failed to execute commands: {str(e)}")
+# Wait and click the "Menu Tab" button
+print("Opening menu tab...")
+menu_button_xpath = "//button[contains(@class,'v-app-bar__nav-icon') and contains(@class,'v-btn--icon')]"
+menu_button = wait.until(
+    EC.element_to_be_clickable((By.XPATH, menu_button_xpath)))
+menu_button.click()
 
-    time.sleep(30)
+# Open the "Current Finances" tab
+print("Opening Current Finances...")
+finances_menu_xpath = "//a[contains(@class, 'v-list-item') and .//span[contains(text(), 'Current Finances')]]"
+finances_menu = wait.until(
+    EC.element_to_be_clickable((By.XPATH, finances_menu_xpath)))
+finances_menu.click()
 
-def main():
-    driver, actions = create_webdriver()
-    try:
-        login(driver, os.getenv("PROJECTIONLAB_EMAIL"), os.getenv("PROJECTIONLAB_PASSWORD"))
-        execute_commands_from_file(driver, 'commands.txt')
-        navigate_finances(driver, actions)
-    except Exception as e:
-        logging.error(f"An error occurred: {str(e)}")
-    finally:
-        driver.quit()
+# Wait and click on a current finance field to update Progress for the day
+print("Clicking on the decimal input text box...")
+input_xpath = "//input[@type='text' and @inputmode='decimal']"
+decimal_input_box = wait.until(EC.element_to_be_clickable((By.XPATH, input_xpath)))
+decimal_input_box.click()
 
-if __name__ == "__main__":
-    main()
+# Deselect the finance field by moving to coordinates and clicking (e.g., x=100, y=200)
+print("Deselecting to save...")
+actions.move_by_offset(400, 50).click().perform()
+
+# Wait a couple of seconds before closing
+time.sleep(30)
+driver.close()
