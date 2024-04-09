@@ -67,10 +67,6 @@ time.sleep(4)
 # Ensure the page has loaded or transitioned before proceeding
 wait.until(EC.visibility_of_element_located((By.TAG_NAME, 'body')))
 
-# Print out all of the visible text on the page to verify the actions were completed successfully
-# page_text = driver.find_element(By.TAG_NAME, "body").text
-# print("Visible text on the page pre-script:", page_text)
-
 # Wait a couple of seconds for the login process to complete
 time.sleep(4)
 
@@ -90,8 +86,6 @@ except Exception as e:
 
 # Wait a couple of seconds
 time.sleep(30)
-
-
 
 # Wait and click the "Menu Tab" button
 print("Opening menu tab...")
@@ -120,53 +114,3 @@ actions.move_by_offset(400, 50).click().perform()
 # Wait a couple of seconds before closing
 time.sleep(30)
 driver.close()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# # page_text = driver.find_element(By.TAG_NAME, "body").text
-# # print("Visible text on the page post-script:", page_text)
-
-# # Wait and click the "Current Finances" button
-# print("Clicking the 'Current Finances' button...")
-# current_finances_button_xpath = "//div[contains(@class, 'v-list-item__title') and contains(text(), 'Current Finances')]"
-# current_finances_button = wait.until(EC.element_to_be_clickable((By.XPATH, current_finances_button_xpath)))
-# current_finances_button.click()
-
-# # Wait a couple of seconds
-# time.sleep(10)
-
-# # Wait and click on a current finance field to update Progress for the day
-# print("Clicking on the decimal input text box...")
-# input_xpath = "//input[@type='text' and @inputmode='decimal']"
-# decimal_input_box = wait.until(EC.element_to_be_clickable((By.XPATH, input_xpath)))
-# decimal_input_box.click()
-
-# # Wait a couple of seconds
-# time.sleep(30)
-
-# # Use JavaScript to click the "Profile" button
-# print("Clicking profile...")
-# user_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[contains(@class, 'v-avatar') and contains(@class, 'app-bar') and contains(@class, 'text--primary')]")))
-# user_button.click()
-
-# # Use JavaScript to click the "Sign Out" button
-# print("Signing out...")
-# sign_out_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='v-list-item__title' and contains(text(), 'Sign Out')]")))
-# sign_out_button.click()
-
-# # Wait a couple of seconds
-# time.sleep(2)
-
-# driver.close()
