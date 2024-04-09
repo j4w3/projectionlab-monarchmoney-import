@@ -19,6 +19,7 @@ chrome_options.add_argument("--disable-dev-shm-usage")
 # Updated instantiation for Selenium 4.x
 service = Service(executable_path=chrome_driver_path)
 driver = webdriver.Chrome(service=service, options=chrome_options)
+actions = ActionChains(driver)
 
 print("Navigating to the login page...")
 driver.get("https://app.projectionlab.com/login")
@@ -93,12 +94,14 @@ time.sleep(30)
 
 
 # Wait and click the "Menu Tab" button
+print("Opening menu tab...")
 menu_button_xpath = "//button[contains(@class,'v-app-bar__nav-icon') and contains(@class,'v-btn--icon')]"
 menu_button = wait.until(
     EC.element_to_be_clickable((By.XPATH, menu_button_xpath)))
 menu_button.click()
 
 # Open the "Current Finances" tab
+print("Opening Current Finances...")
 finances_menu_xpath = "//a[contains(@class, 'v-list-item') and .//span[contains(text(), 'Current Finances')]]"
 finances_menu = wait.until(
     EC.element_to_be_clickable((By.XPATH, finances_menu_xpath)))
@@ -111,6 +114,7 @@ decimal_input_box = wait.until(EC.element_to_be_clickable((By.XPATH, input_xpath
 decimal_input_box.click()
 
 # Deselect the finance field by moving to coordinates and clicking (e.g., x=100, y=200)
+print("Deselecting to save...")
 actions.move_by_offset(400, 50).click().perform()
 
 # Wait a couple of seconds before closing
