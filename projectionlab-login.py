@@ -24,45 +24,31 @@ actions = ActionChains(driver)
 print("Navigating to the login page...")
 driver.get("https://app.projectionlab.com/login")
 
+
+
 # Wait and click the "Sign in with Email" button
 print("Clicking the 'Sign in with Email' button...")
 wait = WebDriverWait(driver, 10)
-# sign_in_button_xpath = "//button[contains(@class, 'firebaseui-idp-button') and .//span[contains(text(), 'Sign in with Email')]]"
-sign_in_button_xpath = '//*[@id="auth-container"]/button[2]'
-timestamp = time.strftime("%Y%m%d-%H%M%S")
-screenshot_path = f"screenshot_{timestamp}.png"
-driver.save_screenshot(screenshot_path)
-wait.until(EC.element_to_be_clickable((By.XPATH, sign_in_button_xpath))).click()
+sign_in_button = driver.find_element(By.XPATH, '//*[@id="auth-container"]/button[2]')
+driver.execute_script("arguments[0].click();", sign_in_button)
 
 # Wait for the email text field to be visible and enter the email using XPath
 print("Entering email...")
-email_input_xpath = "//input[@type='email' and contains(@class, 'firebaseui-id-email')]"
-email_input = wait.until(EC.visibility_of_element_located((By.XPATH, email_input_xpath)))
+email_input = driver.find_element(By.XPATH, '//*[@id="input-7"]')
 email_input.clear()
 email_input.send_keys(os.getenv("PROJECTIONLAB_EMAIL"))
-print("Email entered: ", os.getenv("PROJECTIONLAB_EMAIL"))
-
-# Wait and click the "Next" button
-print("Clicking 'Next'...")
-next_button_xpath = "//button[contains(text(), 'Next')]"
-next_button = wait.until(EC.element_to_be_clickable((By.XPATH, next_button_xpath)))
-next_button.click()
+print("Email entered")
 
 # Wait for the password text field to be visible and enter the password using XPath
 print("Entering password...")
-password_input_xpath = "//input[@type='password' and contains(@class, 'firebaseui-id-password')]"
-password_input = wait.until(EC.visibility_of_element_located((By.XPATH, password_input_xpath)))
+password_input = driver.find_element(By.XPATH, '//*[@id="input-9"]')
 password_input.clear()
 password_input.send_keys(os.getenv("PROJECTIONLAB_PASSWORD"))
-
-# Dismiss the Cookie Consent banner by clicking the "OK" button
-print("Clearing banner...")
-ok_button_id = "onetrust-accept-btn-handler"
-wait.until(EC.element_to_be_clickable((By.ID, ok_button_id))).click()
+print("Password entered")
 
 # Use JavaScript to click the "Sign In" button
 print("Signing in...")
-sign_in_button = wait.until(EC.presence_of_element_located((By.XPATH, "//button[contains(@class, 'firebaseui-id-submit')]")))
+sign_in_button = driver.find_element(By.XPATH, '//*[@id="auth-container"]/form/button')
 driver.execute_script("arguments[0].click();", sign_in_button)
 
 # Wait a couple of seconds for the login process to complete
