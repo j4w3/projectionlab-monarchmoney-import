@@ -27,7 +27,8 @@ driver.get("https://app.projectionlab.com/login")
 # Wait and click the "Sign in with Email" button
 print("Clicking the 'Sign in with Email' button...")
 wait = WebDriverWait(driver, 10)
-sign_in_button_xpath = "//button[contains(@class, 'firebaseui-idp-button') and .//span[contains(text(), 'Sign in with Email')]]"
+# sign_in_button_xpath = "//button[contains(@class, 'firebaseui-idp-button') and .//span[contains(text(), 'Sign in with Email')]]"
+sign_in_button_xpath = "/html/body/div[1]/div/div/main/div[14]/div/div/div/div[3]/div[1]/button[2]"
 wait.until(EC.element_to_be_clickable((By.XPATH, sign_in_button_xpath))).click()
 
 # Wait for the email text field to be visible and enter the email using XPath
