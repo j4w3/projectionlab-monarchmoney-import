@@ -29,6 +29,9 @@ print("Clicking the 'Sign in with Email' button...")
 wait = WebDriverWait(driver, 10)
 # sign_in_button_xpath = "//button[contains(@class, 'firebaseui-idp-button') and .//span[contains(text(), 'Sign in with Email')]]"
 sign_in_button_xpath = '//*[@id="auth-container"]/button[2]'
+timestamp = time.strftime("%Y%m%d-%H%M%S")
+screenshot_path = f"screenshot_{timestamp}.png"
+driver.save_screenshot(screenshot_path)
 wait.until(EC.element_to_be_clickable((By.XPATH, sign_in_button_xpath))).click()
 
 # Wait for the email text field to be visible and enter the email using XPath
