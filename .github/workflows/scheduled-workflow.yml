@@ -46,7 +46,7 @@ jobs:
     needs: run-node-script
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Download commands.txt
       uses: actions/download-artifact@v2
       with:
