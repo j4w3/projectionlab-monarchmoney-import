@@ -37,7 +37,7 @@ jobs:
           exit 1
         fi
     - name: Upload commands.txt as an artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: commands-file
         path: commands.txt
@@ -48,7 +48,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Download commands.txt
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         name: commands-file
         path: .
